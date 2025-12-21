@@ -21,3 +21,9 @@ class PointSpec(ChartSpec):
     x: str
     y: str
     series: Optional[str] = None
+
+class PartsSpec(ChartSpec):
+    kind: Literal["parts"] = Field("parts")
+    x: str
+    y: str
+    series: Optional[str] = None
