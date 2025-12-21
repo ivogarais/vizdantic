@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "your_project"
-description = "A clean, flexible Python project"
+name = "vizdantic"
+description = "Visualistion validation using Pydantic for ai agents"
 requires-python = ">=3.10"
 license = "MIT"
 
