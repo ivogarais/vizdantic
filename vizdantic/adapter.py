@@ -12,7 +12,6 @@ from .spec import (
     GeoSpec,
 )
 
-
 AnyVizSpec = Annotated[
     Union[
         CartesianSpec,
@@ -26,6 +25,5 @@ AnyVizSpec = Annotated[
     ],
     Field(discriminator="kind"),
 ]
-
 
 VIZ_SPEC_ADAPTER = TypeAdapter(AnyVizSpec)

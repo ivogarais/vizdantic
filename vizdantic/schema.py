@@ -1,15 +1,12 @@
-from .adapter import AnyVizSpec
-
+from .adapter import VIZ_SPEC_ADAPTER
 
 def schema() -> dict:
     """
-    Return the JSON Schema describing all supported visualization specifications.
-
-    This is intended for LLM prompting / tool calling.
+    Return the JSON Schema for all Vizdantic visualization specs.
 
     Returns
     -------
     dict
-        JSON Schema dictionary describing all supported visualization specifications.
+        The JSON Schema for all Vizdantic visualization specs.
     """
-    return AnyVizSpec.model_json_schema()
+    return VIZ_SPEC_ADAPTER.json_schema()

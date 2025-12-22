@@ -1,4 +1,5 @@
 from .validate import validate
+from .schema import schema
 
 from .spec import (
     VizSpec,
@@ -14,6 +15,7 @@ from .spec import (
 
 __all__ = [
     "validate",
+    "schema",
     "VizSpec",
     "CartesianSpec",
     "PointsSpec",
