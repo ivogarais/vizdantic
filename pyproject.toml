@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vizdantic"
-version = "0.1.0"
+version = "0.1.2"
 description = "Schema-first visualization specifications for LLMs"
 readme = "README.md"
 requires-python = ">=3.10"
