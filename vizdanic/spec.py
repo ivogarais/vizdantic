@@ -3,72 +3,124 @@ from pydantic import BaseModel, Field
 
 
 class VizSpec(BaseModel):
-    chart: str
-    title: Optional[str] = None
-    legend_title: Optional[str] = None
+    """
+    Base visualization specification.
+
+    Represents validated visualization intent produced by an LLM.
+    """
+
+    chart: str = Field(description="Chart type to render (e.g. bar, line, scatter, pie).")
+    title: Optional[str] = Field(default=None, description="Semantic title for the visualization.")
+    legend_title: Optional[str] = Field(default=None, description="Semantic title for the legend.")
 
 
 class CartesianSpec(VizSpec):
-    kind: Literal["cartesian"] = Field("cartesian")
+    """
+    Cartesian (x–y) visualization.
+    """
 
-    x: str
-    y: str
+    kind: Literal["cartesian"] = Field(
+        "cartesian", description="Cartesian coordinate visualization."
+    )
 
-    series: Optional[str] = None
-    facet: Optional[str] = None
+    x: str = Field(description="Column mapped to the x-axis.")
+    y: str = Field(description="Column mapped to the y-axis.")
+
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color series."
+    )
+    facet: Optional[str] = Field(
+        default=None, description="Column used to split the chart into facets."
+    )
 
 
 class PointsSpec(VizSpec):
-    kind: Literal["points"] = Field("points")
+    """
+    Point-based visualization.
+    """
 
-    x: str
-    y: str
+    kind: Literal["points"] = Field("points", description="Point-based visualization.")
 
-    series: Optional[str] = None
-    size: Optional[str] = None
+    x: str = Field(description="Column mapped to the x-axis.")
+    y: str = Field(description="Column mapped to the y-axis.")
+
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color points."
+    )
+    size: Optional[str] = Field(default=None, description="Column controlling point size.")
 
 
 class DistributionSpec(VizSpec):
-    kind: Literal["distribution"] = Field("distribution")
+    """
+    Distribution visualization.
+    """
 
-    value: str
-    category: Optional[str] = None
+    kind: Literal["distribution"] = Field(
+        "distribution", description="Distribution-based visualization."
+    )
+
+    value: str = Field(description="Column containing values to distribute.")
+    category: Optional[str] = Field(default=None, description="Optional grouping column.")
 
 
 class PartsSpec(VizSpec):
-    kind: Literal["parts"] = Field("parts")
+    """
+    Part-to-whole visualization.
+    """
 
-    label: str
-    value: str
+    kind: Literal["parts"] = Field("parts", description="Part-to-whole visualization.")
+
+    label: str = Field(description="Column defining part labels.")
+    value: str = Field(description="Column defining part values.")
 
 
 class MatrixSpec(VizSpec):
-    kind: Literal["matrix"] = Field("matrix")
+    """
+    Matrix or grid-based visualization.
+    """
 
-    x: str
-    y: str
-    value: str
+    kind: Literal["matrix"] = Field("matrix", description="Matrix or grid visualization.")
+
+    x: str = Field(description="Column mapped to the x-axis.")
+    y: str = Field(description="Column mapped to the y-axis.")
+    value: str = Field(description="Column mapped to cell values.")
 
 
 class FlowSpec(VizSpec):
-    kind: Literal["flow"] = Field("flow")
+    """
+    Flow or relationship visualization.
+    """
 
-    source: str
-    target: str
-    value: Optional[str] = None
+    kind: Literal["flow"] = Field("flow", description="Flow-based visualization.")
+
+    source: str = Field(description="Source node column.")
+    target: str = Field(description="Target node column.")
+    value: Optional[str] = Field(
+        default=None, description="Optional column controlling flow magnitude."
+    )
 
 
 class HierarchySpec(VizSpec):
-    kind: Literal["hierarchy"] = Field("hierarchy")
+    """
+    Hierarchical visualization.
+    """
 
-    path: List[str]
-    value: Optional[str] = None
+    kind: Literal["hierarchy"] = Field("hierarchy", description="Hierarchical visualization.")
+
+    path: List[str] = Field(description="Ordered list of columns defining hierarchy levels.")
+    value: Optional[str] = Field(default=None, description="Optional column defining node values.")
 
 
 class GeoSpec(VizSpec):
-    kind: Literal["geo"] = Field("geo")
+    """
+    Geographic visualization.
+    """
 
-    location: Optional[str] = None
-    lat: Optional[str] = None
-    lon: Optional[str] = None
-    value: Optional[str] = None
+    kind: Literal["geo"] = Field("geo", description="Geographic visualization.")
+
+    location: Optional[str] = Field(
+        default=None, description="Location or region identifier column."
+    )
+    lat: Optional[str] = Field(default=None, description="Latitude column.")
+    lon: Optional[str] = Field(default=None, description="Longitude column.")
+    value: Optional[str] = Field(default=None, description="Column used for color or magnitude.")
