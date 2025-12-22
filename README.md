@@ -65,7 +65,7 @@ llm_output = {
 spec = validate(llm_output)
 </span></span></code></div></div></pre>
 
-### Render with Plotly
+### Render with Plotly Example
 
 <pre class="overflow-visible! px-0!" data-start="1820" data-end="2016"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="@w-xl/main:top-9 sticky top-[calc(--spacing(9)+var(--header-height))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-python"><span><span>from</span><span> vizdantic.plugins.plotly </span><span>import</span><span> render
 </span><span>import</span><span> pandas </span><span>as</span><span> pd
