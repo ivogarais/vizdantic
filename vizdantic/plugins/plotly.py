@@ -9,7 +9,7 @@ except ImportError as e:
         "Install it with: pip install vizdantic[plotly]"
     ) from e
 
-from spec import (
+from ..spec import (
     VizSpec,
     CartesianSpec,
     PointsSpec,
@@ -46,6 +46,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
         If the provided spec type is not supported by the Plotly plugin.
     """
 
+    # Cartesian & point-based charts
     if isinstance(spec, (CartesianSpec, PointsSpec)):
         fig = getattr(px, spec.chart)(
             data,
@@ -55,6 +56,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             title=spec.title,
         )
 
+    # Distribution charts
     elif isinstance(spec, DistributionSpec):
         fig = getattr(px, spec.chart)(
             data,
@@ -63,6 +65,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             title=spec.title,
         )
 
+    # Part-to-whole charts
     elif isinstance(spec, PartsSpec):
         fig = px.pie(
             data,
@@ -71,6 +74,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             title=spec.title,
         )
 
+    # Matrix / heatmap charts
     elif isinstance(spec, MatrixSpec):
         fig = px.density_heatmap(
             data,
@@ -80,15 +84,37 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             title=spec.title,
         )
 
+    # Flow charts (Sankey)
     elif isinstance(spec, FlowSpec):
-        fig = px.sankey(
-            data,
-            source=spec.source,
-            target=spec.target,
-            value=spec.value,
-            title=spec.title,
+        # Build unique node list
+        nodes = list(
+            dict.fromkeys(
+                list(data[spec.source]) + list(data[spec.target])
+            )
+        )
+        node_index = {label: i for i, label in enumerate(nodes)}
+
+        fig = go.Figure(
+            go.Sankey(
+                node=dict(
+                    label=nodes
+                ),
+                link=dict(
+                    source=[node_index[v] for v in data[spec.source]],
+                    target=[node_index[v] for v in data[spec.target]],
+                    value=(
+                        data[spec.value]
+                        if spec.value
+                        else [1] * len(data)
+                    ),
+                ),
+            )
         )
 
+        if spec.title:
+            fig.update_layout(title=spec.title)
+
+    # Hierarchical charts
     elif isinstance(spec, HierarchySpec):
         fig = getattr(px, spec.chart)(
             data,
@@ -97,6 +123,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             title=spec.title,
         )
 
+    # Geographic charts
     elif isinstance(spec, GeoSpec):
         fig = getattr(px, spec.chart)(
             data,
@@ -112,6 +139,7 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             f"Plotly plugin does not support spec type: {type(spec).__name__}"
         )
 
+    # Semantic legend text (LLM-controlled)
     if spec.legend_title:
         fig.update_layout(legend_title_text=spec.legend_title)
 
