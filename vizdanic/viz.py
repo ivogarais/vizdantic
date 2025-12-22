@@ -9,7 +9,7 @@ class VizSpec(BaseModel):
 
 
 class CartesianSpec(VizSpec):
-    kind: Literal["xy"] = Field("xy")
+    kind: Literal["cartesian"] = Field("cartesian")
 
     x: str
     y: str
