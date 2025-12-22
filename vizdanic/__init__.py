@@ -1,5 +1,7 @@
+from .validate import validate
+
 from .viz import (
-    ChartSpec,
+    VizSpec,
     XYSpec,
     PointsSpec,
     DistributionSpec,
@@ -9,10 +11,10 @@ from .viz import (
     HierarchySpec,
     GeoSpec,
 )
-from .spec import VizSpec, VIZ_SPEC_ADAPTER
 
 __all__ = [
-    "ChartSpec",
+    "validate",
+    "VizSpec",
     "XYSpec",
     "PointsSpec",
     "DistributionSpec",
@@ -21,6 +23,4 @@ __all__ = [
     "FlowSpec",
     "HierarchySpec",
     "GeoSpec",
-    "VizSpec",
-    "VIZ_SPEC_ADAPTER",
 ]

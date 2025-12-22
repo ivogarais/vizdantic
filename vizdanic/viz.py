@@ -1,89 +1,74 @@
-from enum import Enum
-from typing import Optional, Literal
+from typing import Optional, Literal, List
 from pydantic import BaseModel, Field
 
-from .enums import (
-    XYChart,
-    PointsChart,
-    DistributionChart,
-    PartsChart,
-    MatrixChart,
-    FlowChart,
-    HierarchyChart,
-    GeoChart,
-)
 
-
-class ChartSpec(BaseModel):
-
-    chart: Enum
+class VizSpec(BaseModel):
+    chart: str
     title: Optional[str] = None
     legend_title: Optional[str] = None
 
 
-class XYSpec(ChartSpec):
+class XYSpec(VizSpec):
     kind: Literal["xy"] = Field("xy")
-    chart: XYChart
 
     x: str
     y: str
+
     series: Optional[str] = None
+    facet: Optional[str] = None
 
 
-class PointsSpec(ChartSpec):
+class PointsSpec(VizSpec):
     kind: Literal["points"] = Field("points")
-    chart: PointsChart
 
     x: str
     y: str
+
     series: Optional[str] = None
+    size: Optional[str] = None
 
 
-class DistributionSpec(ChartSpec):
+class DistributionSpec(VizSpec):
     kind: Literal["distribution"] = Field("distribution")
-    chart: DistributionChart
 
     value: str
     category: Optional[str] = None
 
 
-class PartsSpec(ChartSpec):
+class PartsSpec(VizSpec):
     kind: Literal["parts"] = Field("parts")
-    chart: PartsChart
 
     label: str
     value: str
 
 
-class MatrixSpec(ChartSpec):
+class MatrixSpec(VizSpec):
     kind: Literal["matrix"] = Field("matrix")
-    chart: MatrixChart
 
     x: str
     y: str
     value: str
 
 
-class FlowSpec(ChartSpec):
+class FlowSpec(VizSpec):
     kind: Literal["flow"] = Field("flow")
-    chart: FlowChart
 
     source: str
     target: str
-    value: str
+    value: Optional[str] = None
 
 
-class HierarchySpec(ChartSpec):
+class HierarchySpec(VizSpec):
     kind: Literal["hierarchy"] = Field("hierarchy")
-    chart: HierarchyChart
 
-    path: list[str]
-    value: str
+    path: List[str]
+    value: Optional[str] = None
 
 
-class GeoSpec(ChartSpec):
+class GeoSpec(VizSpec):
     kind: Literal["geo"] = Field("geo")
-    chart: GeoChart
 
-    location: str
+    location: Optional[str] = None
+    lat: Optional[str] = None
+    lon: Optional[str] = None
     value: Optional[str] = None

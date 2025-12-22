@@ -12,8 +12,8 @@ from .viz import (
     GeoSpec,
 )
 
-# Discriminated union over all supported visualization specs
-VizSpec = Annotated[
+
+AnyVizSpec = Annotated[
     Union[
         XYSpec,
         PointsSpec,
@@ -27,4 +27,5 @@ VizSpec = Annotated[
     Field(discriminator="kind"),
 ]
 
-VIZ_SPEC_ADAPTER = TypeAdapter(VizSpec)
+
+VIZ_SPEC_ADAPTER = TypeAdapter(AnyVizSpec)
