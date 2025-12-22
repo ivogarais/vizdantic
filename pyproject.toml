@@ -4,11 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vizdantic"
-version = "0.0.1"
+version = "0.1.0"
 description = "Visualistion validation using Pydantic for ai agents"
 requires-python = ">=3.10"
 license = "MIT"
 dependencies = [
+    "plotly>=6.5.0",
     "pydantic>=2.11.9",
 ]
 

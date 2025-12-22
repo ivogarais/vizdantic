@@ -48,9 +48,8 @@ def render(spec: Any, data):
     elif isinstance(spec, DistributionSpec):
         fig = getattr(px, spec.chart)(
             data,
-            x=spec.x,
-            y=spec.y,
-            color=spec.series,
+            x=spec.value,
+            color=spec.category,
             title=spec.title,
         )
 
@@ -63,8 +62,11 @@ def render(spec: Any, data):
         )
 
     elif isinstance(spec, MatrixSpec):
-        fig = px.imshow(
+        fig = px.density_heatmap(
             data,
+            x=spec.x,
+            y=spec.y,
+            z=spec.value,
             title=spec.title,
         )
 
@@ -89,6 +91,8 @@ def render(spec: Any, data):
         fig = getattr(px, spec.chart)(
             data,
             locations=spec.location,
+            lat=spec.lat,
+            lon=spec.lon,
             color=spec.value,
             title=spec.title,
         )
@@ -98,7 +102,7 @@ def render(spec: Any, data):
             f"Plotly plugin does not support spec type: {type(spec).__name__}"
         )
 
-    if getattr(spec, "legend_title", None):
+    if spec.legend_title:
         fig.update_layout(legend_title_text=spec.legend_title)
 
     return fig
