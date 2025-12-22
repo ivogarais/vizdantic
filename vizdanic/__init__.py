@@ -1,6 +1,6 @@
 from .validate import validate
 
-from .viz import (
+from .spec import (
     VizSpec,
     CartesianSpec,
     PointsSpec,

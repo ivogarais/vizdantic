@@ -2,13 +2,15 @@ from typing import Any
 
 try:
     import plotly.express as px
+    import plotly.graph_objects as go
 except ImportError as e:
     raise ImportError(
         "Vizdantic Plotly plugin requires plotly.\n"
         "Install it with: pip install vizdantic[plotly]"
     ) from e
 
-from viz import (
+from spec import (
+    VizSpec,
     CartesianSpec,
     PointsSpec,
     DistributionSpec,
@@ -20,20 +22,28 @@ from viz import (
 )
 
 
-def render(spec: Any, data):
+def render(spec: VizSpec, data: Any) -> go.Figure:
     """
-    Render a Vizdantic visualization spec using Plotly.
+    Render a Vizdantic visualization specification using Plotly.
 
     Parameters
     ----------
-    spec
-        A validated Vizdantic spec (output of vizdantic.validate).
-    data
-        User-provided dataset (DataFrame-like).
+    spec : VizSpec
+        A validated Vizdantic visualization specification, typically
+        produced by an LLM and validated via ``vizdantic.validate``.
+    data : Any
+        User-provided dataset. This is typically a pandas DataFrame,
+        but any Plotly-compatible data structure is accepted.
 
     Returns
     -------
     plotly.graph_objects.Figure
+        A Plotly figure corresponding to the visualization specification.
+
+    Raises
+    ------
+    NotImplementedError
+        If the provided spec type is not supported by the Plotly plugin.
     """
 
     if isinstance(spec, (CartesianSpec, PointsSpec)):
