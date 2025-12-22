@@ -2,7 +2,7 @@ from .validate import validate
 
 from .viz import (
     VizSpec,
-    XYSpec,
+    CartesianSpec,
     PointsSpec,
     DistributionSpec,
     PartsSpec,
@@ -15,7 +15,7 @@ from .viz import (
 __all__ = [
     "validate",
     "VizSpec",
-    "XYSpec",
+    "CartesianSpec",
     "PointsSpec",
     "DistributionSpec",
     "PartsSpec",

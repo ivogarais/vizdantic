@@ -8,7 +8,7 @@ class VizSpec(BaseModel):
     legend_title: Optional[str] = None
 
 
-class XYSpec(VizSpec):
+class CartesianSpec(VizSpec):
     kind: Literal["xy"] = Field("xy")
 
     x: str

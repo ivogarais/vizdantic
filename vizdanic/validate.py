@@ -13,7 +13,7 @@ def validate(data):
     Returns
     -------
     VizSpec
-        A concrete visualization spec (XYSpec, PointsSpec, etc.).
+        A concrete visualization spec (CartesianSpec, PointsSpec, etc.).
 
     Raises
     ------

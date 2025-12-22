@@ -2,7 +2,7 @@ from typing import Union, Annotated
 from pydantic import Field, TypeAdapter
 
 from .viz import (
-    XYSpec,
+    CartesianSpec,
     PointsSpec,
     DistributionSpec,
     PartsSpec,
@@ -15,7 +15,7 @@ from .viz import (
 
 AnyVizSpec = Annotated[
     Union[
-        XYSpec,
+        CartesianSpec,
         PointsSpec,
         DistributionSpec,
         PartsSpec,
