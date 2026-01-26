@@ -139,7 +139,6 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             f"Plotly plugin does not support spec type: {type(spec).__name__}"
         )
 
-    # Semantic legend text (LLM-controlled)
     if spec.legend_title:
         fig.update_layout(legend_title_text=spec.legend_title)
 
