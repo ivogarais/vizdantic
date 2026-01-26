@@ -166,23 +166,13 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
 
     # Financial charts
     elif isinstance(spec, FinancialSpec):
-        # Handle different financial chart types
-        if spec.chart in ["funnel", "funnel_area"]:
-            fig = getattr(px, spec.chart)(
-                data,
-                x=spec.x,
-                y=spec.y,
-                names=spec.label,
-                values=spec.value,
-                title=spec.title,
-            )
-        else:
-            fig = getattr(px, spec.chart)(
-                data,
-                x=spec.x,
-                y=spec.y,
-                title=spec.title,
-            )
+        # Funnel charts use x and y directly
+        fig = getattr(px, spec.chart)(
+            data,
+            x=spec.x,
+            y=spec.y,
+            title=spec.title,
+        )
 
     # Parallel coordinates/categories
     elif isinstance(spec, ParallelSpec):
