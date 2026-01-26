@@ -4,230 +4,206 @@
 ![Status](https://img.shields.io/badge/status-experimental-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Vizdantic** is a schema-first visualization layer for LLMs.
+**Stop LLMs from hallucinating plotting APIs. Let them describe what to visualize instead.**
 
-It allows language models to describe *what* to visualize using structured,
-validated specifications, while developers remain in full control of *how*
-charts are rendered.
+Vizdantic separates the data layer (what LLMs produce) from the view layer (what your code renders).
 
 ---
 
-## Why Vizdantic?
+## The Problem
 
-LLMs are good at describing intent, but unreliable at writing plotting code.
+You want an LLM to create charts from data. You have two bad options:
 
-They often:
+1. **Let the LLM write plotting code** → It hallucinates APIs, mixes incompatible parameters, breaks on library updates
+2. **Hardcode every chart type** → Rigid, doesn't scale, defeats the purpose of using an LLM
 
-- hallucinate APIs
-- mix incompatible chart parameters
-- produce brittle, unvalidated code
-
-Vizdantic solves this by separating responsibilities:
-
-> **LLMs choose visualization intent.**
-> **Developers choose the plotting library.**
+**The actual problem:** LLMs are great at understanding intent but terrible at remembering exact function signatures.
 
 ---
 
-## What Vizdantic Does
+## The Solution
 
-- Provides **Pydantic schemas** for common visualization types
-- Validates LLM-generated visualization intent
-- Is **library-agnostic** by design
-- Renders charts via optional plugins (e.g. Plotly)
+Vizdantic gives LLMs a stable contract: describe *what* to visualize, not *how* to plot it.
 
-Vizdantic does **not** replace plotting libraries.
-It sits between LLMs and visualization backends.
+```python
+# LLM outputs this (validated against schema):
+{
+  "kind": "cartesian",
+  "chart": "bar",
+  "x": "month",
+  "y": "revenue"
+}
+
+# Your code renders it however you want:
+fig = render(spec, df)
+fig = apply_company_theme(fig)
+fig.show()
+```
+
+**You get:**
+- Validated LLM output (no hallucinated APIs)
+- Full control over rendering (swap Plotly for Matplotlib anytime)
+- Type-safe specs (a "flow" chart can't claim `chart="bar"`)
+
+---
+
+## Is This For You?
+
+**Yes, if you:**
+- Build LLM apps that generate charts
+- Want LLMs to pick chart types, not write plotting code
+- Need to enforce brand guidelines on LLM-generated visualizations
+- Want a stable interface between LLM output and rendering logic
+
+**No, if you:**
+- Just need a plotting library (use Plotly/Matplotlib directly)
+- Don't use LLMs for visualization
+- Want the LLM to control colors/fonts/styling
 
 ---
 
 ## Quick Start
 
-### Install
-
 ```bash
 pip install vizdantic
 ```
 
-### Validate LLM output
-
 ```python
 from vizdantic import validate
-
-llm_output = {
-    "kind": "cartesian",
-    "chart": "bar",
-    "x": "category",
-    "y": "value",
-    "title": "Sales by Category",
-}
-
-spec = validate(llm_output)
-```
-
-### Render with Plotly Example
-
-```python
 from vizdantic.plugins.plotly import render
 import pandas as pd
 
-df = pd.DataFrame({
-    "category": ["A", "B", "C"],
-    "value": [10, 20, 15],
-})
+# 1. LLM produces this JSON
+llm_output = {
+    "kind": "cartesian",
+    "chart": "bar",
+    "x": "month",
+    "y": "revenue"
+}
 
+# 2. Validate it
+spec = validate(llm_output)  # Raises ValidationError if invalid
+
+# 3. Render it
+df = pd.DataFrame({"month": ["Jan", "Feb", "Mar"], "revenue": [100, 150, 120]})
 fig = render(spec, df)
 fig.show()
 ```
 
----
-
-## Using Vizdantic with LLMs
-
-Vizdantic works with **any LLM** and supports  **two common integration patterns** .
-
-| Prompt-based (Universal)                                               | Tool / Function Calling (Structured)                                            |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Use when your LLM does**not** support tools or function calling. | Use when your LLM**supports JSON schema tools**(OpenAI, Anthropic, etc.). |
-| You embed the schema directly in the prompt.                           | You pass the schema as a tool input contract.                                   |
-
-### Prompt-based integration
-
-```yaml
-You are an assistant that creates visualization specifications.
-
-Return JSON that strictly conforms to the following schema:
-
-
-{{ vizdantic.schema() }}
-
-
-Rules:
-- Return JSON only
-- Choose the most appropriate chart type
-- Use column names exactly as provided
-```
-
-Example model output:
-
-```json
-{
-  "kind":"cartesian",
-  "chart":"bar",
-  "x":"category",
-  "y":"value",
-  "title":"Sales by Category"
-}
-```
+That's it. The LLM never touches plotting code.
 
 ---
 
-### Tool / function calling integration
+## What Charts Are Supported?
 
-```json
+Vizdantic supports **14 chart type categories** covering ~90% of common use cases:
+
+| Category | Chart Types | Example Use Case |
+|----------|-------------|------------------|
+| **Cartesian** | bar, line, area, scatter | Time series, comparisons |
+| **Distribution** | histogram, box, violin, strip | Statistical analysis |
+| **Parts** | pie | Proportions, market share |
+| **Geo** | choropleth, scatter_geo, mapbox | Geographic data |
+| **Hierarchy** | treemap, sunburst, icicle | Organizational charts |
+| **Flow** | sankey | Process flows, migrations |
+| **Polar** | scatter_polar, line_polar, bar_polar | Directional data, wind roses |
+| **Ternary** | scatter_ternary, line_ternary | 3-component compositions |
+| **3D** | scatter_3d, line_3d | Spatial data |
+| **Financial** | funnel, funnel_area | Sales funnels, conversions |
+| **Parallel** | parallel_coordinates, parallel_categories | Multi-dimensional data |
+| **Timeline** | timeline | Gantt charts, schedules |
+| **Matrix** | heatmap, imshow | Correlation matrices |
+| **Points** | scatter | Basic scatter plots |
+
+Each category has strongly-typed chart options. The LLM can't create invalid combinations.
+
+---
+
+## How to Use With LLMs
+
+Vizdantic works with any LLM. Two common patterns:
+
+### Option 1: Prompt-Based (Universal)
+
+Embed the schema in your prompt:
+
+```python
+from vizdantic import schema
+
+prompt = f"""
+You are a data visualization assistant.
+Return JSON matching this schema:
+
+{schema()}
+
+User data columns: {df.columns.tolist()}
+User request: "Show me revenue by month as a bar chart"
+"""
+```
+
+The LLM returns JSON. You validate and render it.
+
+### Option 2: Tool/Function Calling (Structured)
+
+For LLMs that support tools (OpenAI, Anthropic, etc.):
+
+```python
 tool = {
-    "name": "create_visualization",
-    "description": "Create a visualization specification",
-    "input_schema": vizdantic.schema(),
+    "name": "create_chart",
+    "description": "Create a data visualization",
+    "input_schema": schema()
 }
 ```
 
-The LLM is now constrained to  **valid Vizdantic output only** .
+The LLM is now constrained to valid output only.
 
 ---
 
-## Validate and Render
+## Styling: You're In Control
 
-Once the LLM returns JSON, the workflow is the same:
-
-```python
-from vizdantic import validate
-from vizdantic.plugins.plotly import render
-
-spec = validate(llm_output)
-fig = render(spec, df)
-fig.show()
-```
-
-## Custom Styling and Branding
-
-Vizdantic **does not control styling**.
-
-It intentionally avoids:
-
-- colors
-- themes
-- fonts
-- layout decisions
-
-Vizdantic only defines **visualization intent**.
-All styling remains fully under **user control**.
-
-This makes it safe to use in production environments with strict
-brand or design requirements.
-
----
-
-### Example: Company styling (Evil Corp)
+Vizdantic doesn't touch colors, fonts, or themes. That's intentional.
 
 ```python
-from vizdantic.plugins.plotly import render
-
-def evil_corp_theme(fig):
+def company_theme(fig):
     fig.update_layout(
         template="plotly_dark",
         colorway=["#ff0000", "#000000"],
-        font=dict(family="Inter"),
+        font=dict(family="Inter")
     )
     return fig
 
 fig = render(spec, df)
-fig = evil_corp_theme(fig)
+fig = company_theme(fig)  # Apply your branding
 fig.show()
 ```
 
-The LLM decides what to visualize.
-Your code decides how it looks.
+The LLM picks the chart type. You control everything else.
 
-Vizdantic never overrides user-defined styling.
-
-## How It Works
-
-1. An LLM produces structured visualization intent (JSON)
-2. Vizdantic validates it using Pydantic
-3. A plugin translates the spec into a concrete chart
-
-The schema is stable and backend-agnostic.
-
-Rendering is handled entirely by plugins.
+This is why Vizdantic works in production: it never fights your design system.
 
 ---
 
 ## Plugins
 
-Currently supported:
+**Currently supported:**
+- Plotly (`vizdantic.plugins.plotly`)
 
-* **Plotly** (`vizdantic.plugins.plotly`)
+**Planned:**
+- Matplotlib
+- Altair
+- Vega-Lite
 
-Planned:
+Each plugin exposes one function: `render(spec, data) → figure`
 
-* Matplotlib
-* Altair
-* Vega-Lite
-
-Each plugin exposes a simple:
-
-<pre class="overflow-visible! px-0!" data-start="3915" data-end="3947"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="@w-xl/main:top-9 sticky top-[calc(--spacing(9)+var(--header-height))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-python"><span><span>render(spec, data)
-</span></span></code></div></div></pre>
-
-function.
+Want a custom plugin? Implement that function. The spec is just a Pydantic model.
 
 ---
 
 ## Status
 
-* **Version:** 0.1.0
-* **Stability:** Experimental
-* **Breaking changes:** Possible until 1.0
+- **Version:** 0.2.0
+- **Stability:** Experimental (breaking changes possible until 1.0)
+- **Python:** 3.10+
+- **License:** MIT
 
-Vizdantic is under active development and feedback is welcome.
+Feedback welcome. This is a real project solving a real problem, not a demo.
