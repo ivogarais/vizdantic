@@ -11,6 +11,12 @@ from .spec import (
     FlowSpec,
     HierarchySpec,
     GeoSpec,
+    PolarSpec,
+    TernarySpec,
+    ThreeDSpec,
+    FinancialSpec,
+    ParallelSpec,
+    TimelineSpec,
 )
 
 __all__ = [
@@ -25,4 +31,10 @@ __all__ = [
     "FlowSpec",
     "HierarchySpec",
     "GeoSpec",
+    "PolarSpec",
+    "TernarySpec",
+    "ThreeDSpec",
+    "FinancialSpec",
+    "ParallelSpec",
+    "TimelineSpec",
 ]

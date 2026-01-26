@@ -10,6 +10,12 @@ from .spec import (
     FlowSpec,
     HierarchySpec,
     GeoSpec,
+    PolarSpec,
+    TernarySpec,
+    ThreeDSpec,
+    FinancialSpec,
+    ParallelSpec,
+    TimelineSpec,
 )
 
 AnyVizSpec = Annotated[
@@ -22,6 +28,12 @@ AnyVizSpec = Annotated[
         FlowSpec,
         HierarchySpec,
         GeoSpec,
+        PolarSpec,
+        TernarySpec,
+        ThreeDSpec,
+        FinancialSpec,
+        ParallelSpec,
+        TimelineSpec,
     ],
     Field(discriminator="kind"),
 ]

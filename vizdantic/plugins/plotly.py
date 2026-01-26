@@ -19,6 +19,12 @@ from ..spec import (
     FlowSpec,
     HierarchySpec,
     GeoSpec,
+    PolarSpec,
+    TernarySpec,
+    ThreeDSpec,
+    FinancialSpec,
+    ParallelSpec,
+    TimelineSpec,
 )
 
 
@@ -87,26 +93,16 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
     # Flow charts (Sankey)
     elif isinstance(spec, FlowSpec):
         # Build unique node list
-        nodes = list(
-            dict.fromkeys(
-                list(data[spec.source]) + list(data[spec.target])
-            )
-        )
+        nodes = list(dict.fromkeys(list(data[spec.source]) + list(data[spec.target])))
         node_index = {label: i for i, label in enumerate(nodes)}
 
         fig = go.Figure(
             go.Sankey(
-                node=dict(
-                    label=nodes
-                ),
+                node=dict(label=nodes),
                 link=dict(
                     source=[node_index[v] for v in data[spec.source]],
                     target=[node_index[v] for v in data[spec.target]],
-                    value=(
-                        data[spec.value]
-                        if spec.value
-                        else [1] * len(data)
-                    ),
+                    value=(data[spec.value] if spec.value else [1] * len(data)),
                 ),
             )
         )
@@ -131,6 +127,80 @@ def render(spec: VizSpec, data: Any) -> go.Figure:
             lat=spec.lat,
             lon=spec.lon,
             color=spec.value,
+            title=spec.title,
+        )
+
+    # Polar charts
+    elif isinstance(spec, PolarSpec):
+        fig = getattr(px, spec.chart)(
+            data,
+            r=spec.r,
+            theta=spec.theta,
+            color=spec.series,
+            title=spec.title,
+        )
+
+    # Ternary charts
+    elif isinstance(spec, TernarySpec):
+        fig = getattr(px, spec.chart)(
+            data,
+            a=spec.a,
+            b=spec.b,
+            c=spec.c,
+            color=spec.series,
+            size=spec.size,
+            title=spec.title,
+        )
+
+    # 3D charts
+    elif isinstance(spec, ThreeDSpec):
+        fig = getattr(px, spec.chart)(
+            data,
+            x=spec.x,
+            y=spec.y,
+            z=spec.z,
+            color=spec.series,
+            size=spec.size,
+            title=spec.title,
+        )
+
+    # Financial charts
+    elif isinstance(spec, FinancialSpec):
+        # Handle different financial chart types
+        if spec.chart in ["funnel", "funnel_area"]:
+            fig = getattr(px, spec.chart)(
+                data,
+                x=spec.x,
+                y=spec.y,
+                names=spec.label,
+                values=spec.value,
+                title=spec.title,
+            )
+        else:
+            fig = getattr(px, spec.chart)(
+                data,
+                x=spec.x,
+                y=spec.y,
+                title=spec.title,
+            )
+
+    # Parallel coordinates/categories
+    elif isinstance(spec, ParallelSpec):
+        fig = getattr(px, spec.chart)(
+            data,
+            dimensions=spec.dimensions,
+            color=spec.color,
+            title=spec.title,
+        )
+
+    # Timeline/Gantt charts
+    elif isinstance(spec, TimelineSpec):
+        fig = px.timeline(
+            data,
+            x_start=spec.x_start,
+            x_end=spec.x_end,
+            y=spec.y,
+            color=spec.series,
             title=spec.title,
         )
 

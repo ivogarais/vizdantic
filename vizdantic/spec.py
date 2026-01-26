@@ -124,3 +124,90 @@ class GeoSpec(VizSpec):
     lat: Optional[str] = Field(default=None, description="Latitude column.")
     lon: Optional[str] = Field(default=None, description="Longitude column.")
     value: Optional[str] = Field(default=None, description="Column used for color or magnitude.")
+
+
+class PolarSpec(VizSpec):
+    """
+    Polar coordinate visualization.
+    """
+
+    kind: Literal["polar"] = Field("polar", description="Polar coordinate visualization.")
+
+    r: str = Field(description="Column mapped to the radial axis.")
+    theta: str = Field(description="Column mapped to the angular axis.")
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color series."
+    )
+
+
+class TernarySpec(VizSpec):
+    """
+    Ternary coordinate visualization.
+    """
+
+    kind: Literal["ternary"] = Field("ternary", description="Ternary coordinate visualization.")
+
+    a: str = Field(description="Column mapped to the first ternary axis.")
+    b: str = Field(description="Column mapped to the second ternary axis.")
+    c: str = Field(description="Column mapped to the third ternary axis.")
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color series."
+    )
+    size: Optional[str] = Field(default=None, description="Column controlling point size.")
+
+
+class ThreeDSpec(VizSpec):
+    """
+    3D coordinate visualization.
+    """
+
+    kind: Literal["3d"] = Field("3d", description="3D coordinate visualization.")
+
+    x: str = Field(description="Column mapped to the x-axis.")
+    y: str = Field(description="Column mapped to the y-axis.")
+    z: str = Field(description="Column mapped to the z-axis.")
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color series."
+    )
+    size: Optional[str] = Field(default=None, description="Column controlling point size.")
+
+
+class FinancialSpec(VizSpec):
+    """
+    Financial visualization (funnel, waterfall).
+    """
+
+    kind: Literal["financial"] = Field("financial", description="Financial visualization.")
+
+    x: Optional[str] = Field(default=None, description="Column mapped to the x-axis.")
+    y: Optional[str] = Field(default=None, description="Column mapped to the y-axis.")
+    value: Optional[str] = Field(default=None, description="Column containing values.")
+    label: Optional[str] = Field(default=None, description="Column defining labels.")
+
+
+class ParallelSpec(VizSpec):
+    """
+    Parallel coordinates or categories visualization.
+    """
+
+    kind: Literal["parallel"] = Field(
+        "parallel", description="Parallel coordinates visualization."
+    )
+
+    dimensions: List[str] = Field(description="List of columns to display as parallel dimensions.")
+    color: Optional[str] = Field(default=None, description="Column used for coloring.")
+
+
+class TimelineSpec(VizSpec):
+    """
+    Timeline or Gantt chart visualization.
+    """
+
+    kind: Literal["timeline"] = Field("timeline", description="Timeline visualization.")
+
+    x_start: str = Field(description="Column containing start times/dates.")
+    x_end: str = Field(description="Column containing end times/dates.")
+    y: str = Field(description="Column mapped to the y-axis (task names).")
+    series: Optional[str] = Field(
+        default=None, description="Column used to group or color series."
+    )
