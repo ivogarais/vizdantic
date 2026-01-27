@@ -1,5 +1,8 @@
 # Vizdantic
 
+<img width="300" height="300" alt="ChatGPT Image Jan 27, 2026, 05_16_35 PM" src="https://github.com/user-attachments/assets/dc955536-c9f5-4e0e-890a-ed11030d51b0" />
+
+
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Status](https://img.shields.io/badge/status-experimental-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
