@@ -222,7 +222,7 @@ Want a custom plugin? Implement that function. The spec is just a Pydantic model
 
 ## Status
 
-- **Version:** 0.2.1
+- **Version:** 0.2.2
 - **Stability:** Experimental (breaking changes possible until 1.0)
 - **Python:** 3.10+
 - **License:** MIT
