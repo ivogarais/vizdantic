@@ -1,0 +1,52 @@
+{
+  "template": "plotly_white",
+  "font": {
+    "family": "Inter",
+    "size": 14,
+    "color": "#111827"
+  },
+  "title": {
+    "font": {
+      "family": "Inter",
+      "size": 18,
+      "color": "#111827"
+    }
+  },
+  "colorway": [
+    "#2563EB",
+    "#10B981",
+    "#F59E0B",
+    "#EF4444",
+    "#8B5CF6"
+  ],
+  "paper_bgcolor": "#FFFFFF",
+  "plot_bgcolor": "#FFFFFF",
+  "xaxis": {
+    "gridcolor": "#E5E7EB",
+    "zerolinecolor": "#E5E7EB",
+    "title": {
+      "font": {
+        "size": 14
+      }
+    }
+  },
+  "yaxis": {
+    "gridcolor": "#E5E7EB",
+    "zerolinecolor": "#E5E7EB",
+    "title": {
+      "font": {
+        "size": 14
+      }
+    }
+  },
+  "legend": {
+    "orientation": "h",
+    "y": -0.2,
+    "x": 0,
+    "title": {
+      "font": {
+        "size": 12
+      }
+    }
+  }
+}
