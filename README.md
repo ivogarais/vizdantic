@@ -97,6 +97,24 @@ That's it. The LLM never touches plotting code.
 
 ---
 
+## Codex Skill (Optional)
+
+This repo includes a Codex skill for running Vizdantic visualizations locally.
+
+```bash
+vizdantic install-codex-skill
+```
+
+Or with uv:
+
+```bash
+uv run vizdantic install-codex-skill
+```
+
+Restart Codex after installing. The skill will appear as `vizdantic-runner`.
+
+---
+
 ## What Charts Are Supported?
 
 Vizdantic supports **14 chart type categories** covering ~90% of common use cases:
