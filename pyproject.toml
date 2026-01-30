@@ -33,6 +33,12 @@ dependencies = [
 plotly = [
   "plotly>=5.0"
 ]
+dev = [
+  "kaleido>=0.2",
+  "pandas>=2.0",
+  "plotly>=5.0",
+  "pyyaml>=6.0",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["vizdantic"]
@@ -49,3 +55,6 @@ quote-style = "single"
 
 [tool.uv]
 required-version = ">=0.8.0"
+
+[tool.uv.scripts]
+install-codex-skill = "python scripts/install_codex_skill.py"
